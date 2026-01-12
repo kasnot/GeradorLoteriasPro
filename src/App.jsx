@@ -200,14 +200,14 @@ export default function GeradorLoterias() {
   }
 
   // 2. Detecta retorno do Stripe (?premium=true)
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('premium') === 'true') {
-    localStorage.setItem('premium', 'true');
-    setIsPremium(true);
+  // const params = new URLSearchParams(window.location.search);
+  // if (params.get('premium') === 'true') {
+    // localStorage.setItem('premium', 'true');
+    // setIsPremium(true);
 
-    alert('🎉 Premium ativado com sucesso!');
-    window.history.replaceState({}, document.title, '/');
-  }
+    // alert('🎉 Premium ativado com sucesso!');
+    // window.history.replaceState({}, document.title, '/');
+  // }
 
   // 3. Carrega dados locais
   const carregarDados = async () => {
