@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react';
 import './index.css';
-import App from './App';
 import {
   Dice1,
   Download,
   Trash2,
   Save,
-  TrendingUp,
   CheckCircle,
   Bell,
   Share2,
   Moon,
   Sun,
   BarChart3,
-  Settings,
-  Users,
   Crown,
 } from 'lucide-react';
 
@@ -189,9 +185,6 @@ export default function GeradorLoterias() {
 
   const config = LOTERIAS_CONFIG[loteriaAtual];
 
-  const LIMITE_FREE = 5;
-  const LIMITE_PREMIUM = 50;
-
   useEffect(() => {
   // 1. Verifica se já existe o status Premium salvo no navegador
   const premiumSalvo = localStorage.getItem('premium');
@@ -261,19 +254,6 @@ const irParaCheckout = async () => {
     alert('Erro de conexão: O servidor está acordando. Aguarde 30 segundos e tente novamente.');
   }
 };
-
-
-  // Função para Ativação Gratuita/Teste 
-  function ativarPremium() {
-    localStorage.setItem('premium', 'true');
-    setIsPremium(true);
-    alert('🎉 Modo Premium ativado (Local)!');
-}
-
-  function cancelarPremium() {
-    localStorage.removeItem('premium');
-    setIsPremium(false);
-  }
 
   const salvarTema = async (escuro) => {
     setModoEscuro(escuro);
