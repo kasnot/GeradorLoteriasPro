@@ -193,21 +193,22 @@ export default function GeradorLoterias() {
   const LIMITE_PREMIUM = 50;
 
   useEffect(() => {
-  // 1. Verifica Premium salvo
+  // 1. Verifica se já existe o status Premium salvo no navegador
   const premiumSalvo = localStorage.getItem('premium');
   if (premiumSalvo === 'true') {
     setIsPremium(true);
   }
 
   // 2. Detecta retorno do Stripe (?premium=true)
-  // const params = new URLSearchParams(window.location.search);
-  // if (params.get('premium') === 'true') {
-    // localStorage.setItem('premium', 'true');
-    // setIsPremium(true);
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('premium') === 'true') {
+    localStorage.setItem('premium', 'true');
+    setIsPremium(true);
 
-    // alert('🎉 Premium ativado com sucesso!');
-    // window.history.replaceState({}, document.title, '/');
-  // }
+    alert('🎉 Premium ativado com sucesso!');
+    // Limpa a URL para não ficar mostrando "?premium=true"
+    window.history.replaceState({}, document.title, '/');
+  }
 
   // 3. Carrega dados locais
   const carregarDados = async () => {
@@ -228,13 +229,45 @@ export default function GeradorLoterias() {
   carregarDados();
 }, []);
 
-  function ativarPremium() {
-    localStorage.setItem('usuario_premium', 'true');
-    setIsPremium(true);
+
+// Função para Pagamento Real 
+const irParaCheckout = async () => {
+  try {
+    const response = await fetch('glpro.onrender.com', { 
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (!response.ok) {
+      // Mensagem de erro mais robusta para produção
+      throw new Error('Falha de comunicação com o servidor de pagamentos.');
+    }
+
+    const data = await response.json();
+    
+    if (data.url) {
+      // Redireciona o usuário para o checkout do Stripe
+      window.location.href = data.url; 
+    } else {
+      alert('Erro ao iniciar pagamento. Resposta inválida do servidor.');
+    }
+  } catch (error) {
+    console.error(error);
+    // Esta mensagem aparecerá se o servidor do Render estiver offline (hibernando)
+    alert('Erro de conexão. O servidor de pagamento pode estar offline temporariamente. Tente novamente em 1 minuto.');
   }
+};
+
+
+  // Função para Ativação Gratuita/Teste 
+  function ativarPremium() {
+    localStorage.setItem('premium', 'true');
+    setIsPremium(true);
+    alert('🎉 Modo Premium ativado (Local)!');
+}
 
   function cancelarPremium() {
-    localStorage.removeItem('usuario_premium');
+    localStorage.removeItem('premium');
     setIsPremium(false);
   }
 
@@ -508,30 +541,30 @@ export default function GeradorLoterias() {
       .slice(0, 20);
   };
 
-  const irParaCheckout = async () => {
-    try {
-      const response = await fetch(
-        'https://glpro.onrender.com/create-checkout-session',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+  //const irParaCheckout = async () => {
+    //try {
+      //const response = await fetch(
+        //'https://glpro.onrender.com/create-checkout-session',
+        //{
+         // method: 'POST',
+          //headers: {
+            //'Content-Type': 'application/json',
+          //},
+        //}
+      //);
 
-      const data = await response.json();
+      //const data = await response.json();
 
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        alert('Erro ao iniciar pagamento');
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Erro de conexão com o servidor');
-    }
-  };
+      //if (data.url) {
+        //window.location.href = data.url;
+      //} else {
+        //alert('Erro ao iniciar pagamento');
+      //}
+    //} catch (error) {
+      //console.error(error);
+      //alert('Erro de conexão com o servidor');
+    //}
+  //};
 
   const bgClass = modoEscuro
     ? 'bg-slate-900'
