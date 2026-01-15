@@ -233,7 +233,7 @@ export default function GeradorLoterias() {
 // Função para Pagamento Real 
 const irParaCheckout = async () => {
   try {
-    const response = await fetch('glpro.onrender.com', { 
+    const response = await fetch('https://glpro.onrender.com', { 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     });
