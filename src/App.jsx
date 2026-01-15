@@ -233,28 +233,32 @@ export default function GeradorLoterias() {
 // Função para Pagamento Real 
 const irParaCheckout = async () => {
   try {
-    const response = await fetch('https://glpro.onrender.com', { 
+    // Pegue o token do localStorage (ajuste o nome da chave se necessário)
+    const token = localStorage.getItem('token'); 
+
+    const response = await fetch('glpro.onrender.com', { 
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        // Se você NÃO estiver usando login agora, remova a linha abaixo
+        'Authorization': `Bearer ${token}` 
+      }
     });
 
     if (!response.ok) {
-      // Mensagem de erro mais robusta para produção
-      throw new Error('Falha de comunicação com o servidor de pagamentos.');
+      throw new Error('Servidor em standby ou erro na autenticação.');
     }
 
     const data = await response.json();
     
     if (data.url) {
-      // Redireciona o usuário para o checkout do Stripe
-      window.location.href = data.url; 
+      window.location.href = data.url; // Redireciona para o Stripe
     } else {
-      alert('Erro ao iniciar pagamento. Resposta inválida do servidor.');
+      alert('Erro ao gerar link de pagamento.');
     }
   } catch (error) {
     console.error(error);
-    // Esta mensagem aparecerá se o servidor do Render estiver offline (hibernando)
-    alert('Erro de conexão. O servidor de pagamento pode estar offline temporariamente. Tente novamente em 1 minuto.');
+    alert('Erro de conexão: O servidor está acordando. Aguarde 30 segundos e tente novamente.');
   }
 };
 
