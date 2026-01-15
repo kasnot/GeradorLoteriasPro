@@ -236,7 +236,7 @@ const irParaCheckout = async () => {
     // Pegue o token do localStorage (ajuste o nome da chave se necessário)
     const token = localStorage.getItem('token'); 
 
-    const response = await fetch('glpro.onrender.com', { 
+    const response = await fetch('https://glpro.onrender.com/create-checkout-session', { 
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
